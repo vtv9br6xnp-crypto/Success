@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adam Taoussi | Secret Empire</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg: #06020f;
+            --card-bg: rgba(20, 10, 35, 0.6);
+            --primary: #a855f7;
+            --text-ar: 'Cairo', sans-serif;
+            --text-en: 'Poppins', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #f3e8ff;
+            font-family: var(--text-ar);
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #1e113a 0%, #06020f 80%);
+            min-height: 100vh;
+        }
+
+        /* 🔒 نظام القفل شديد الإغلاق */
+        #lock-screen {
+            position: fixed;
+            inset: 0;
+            background: #030008;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lock-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(168, 85, 247, 0.2);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .lock-icon {
+            font-size: 60px;
+            color: var(--primary);
+            text-shadow: 0 0 20px var(--primary);
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .lock-card input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(168, 85, 247, 0.2);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 22px;
+            text-align: center;
+            letter-spacing: 4px;
+            outline: none;
+            margin-top: 20px;
+        }
+
+        .lock-card input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+        }
+
+        /* 🌐 المحتوى الرئيسي */
+        #app-content {
+            display: none;
+            padding-bottom: 50px;
+        }
+
+        /* النافبار */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(168, 85, 247, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo { font-weight: 900; font-size: 24px; color: #fff; text-shadow: 0 0 10px var(--primary); }
+        
+        .lang-btn {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(168, 85, 247, 0.4);
+        }
+
+        /* الهيرو */
+        .hero {
+            text-align: center;
+            padding: 60px 5%;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 { font-size: 42px; margin-bottom: 20px; color: #fff; }
+        .hero p { color: #a78bfa; font-size: 18px; line-height: 1.6; }
+
+        /* 📱 الخانات العائمة والديناميكية */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 20px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .floating-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(168, 85, 247, 0.15);
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            cursor: pointer;
+            transform: translateY(0);
+        }
+
+        /* حركة عائمة تفاعلية */
+        .floating-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.25);
+        }
+
+        .card-icon {
+            font-size: 35px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .floating-card h3 { color: #fff; margin-bottom: 15px; font-size: 22px; }
+        .floating-card p { color: #cbd5e1; font-size: 15px; line-height: 1.6; }
+
+        /* 🔗 الحسابات ف الجنب */
+        .sidebar-social {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            z-index: 500;
+        }
+
+        body.lang-en .sidebar-social { left: auto; right: 20px; }
+
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            text-decoration: none;
+            font-size: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .social-link:hover {
+            background: var(--primary);
+            box-shadow: 0 0 20px var(--primary);
+            transform: scale(1.2) rotate(360deg);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .shake { animation: shake 0.4s ease-in-out; border-color: #ef4444 !important; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="lock-screen">
+        <div class="lock-card" id="lock-box">
+            <div class="lock-icon"><i class="fas fa-user-secret"></i></div>
+            <h2 id="lock-title">🔐 نظام مشفر: آدم طوسي</h2>
+            <input type="password" id="passkey" placeholder="••••••" maxlength="6" oninput="verifyKey(this.value)">
+        </div>
+    </div>
+
+    <div id="app-content">
+        <nav>
+            <div class="logo">ADAM.EMPIRE</div>
+            <button class="lang-btn" onclick="toggleLanguage()" id="langBtn">English</button>
+        </nav>
+
+        <section class="hero">
+            <h1 id="hero-title">كيفاش تبدا دخل الفلوس فـ أسبوع؟ 💸</h1>
+            <p id="hero-desc">هادشي كامل مبني على التجربة الشخصية ديالي والنصائح الحقيقية اللي غتخليك تدير أول مليون ديالك وتعرف تسيرها بلا كذوب.</p>
+        </section>
+
+        <div class="grid-container">
+            <div class="floating-card">
+                <div class="card-icon"><i class="fas fa-laptop-code"></i></div>
+                <h3 class="c1-title">مشاريع الإنترنت (أسبوع 1)</h3>
+                <p class="c1-desc">صناعة صفحات الهبوط والـ MVP للشركات المحلية بالذكاء الاصطناعي. الطلب عليها خيالي والربح سريع جداً.</p>
+            </div>
+            <div class="floating-card">
+                <div class="card-icon"><i class="fas fa-store"></i></div>
+                <h3 class="c2-title">مشاريع الواقع السريعة</h3>
+                <p class="c2-desc">الاتفاق مع المقاهي والمطاعم فـ مدينتك لتصنيع منيو رقمي (QR Code). مهارة كتجيب الكاش فـ 48 ساعة.</p>
+            </div>
+            <div class="floating-card">
+                <div class="card-icon"><i class="fas fa-wallet"></i></div>
+                <h3 class="c3-title">قواعد إدارة الأموال</h3>
+                <p class="c3-desc">الفلوس اللي كتدخلها إلا ما عرفتيش تسيرها غتمشي. قاعدة 50/30/20 والاستثمار فـ راسك هوما السلاح.</p>
+            </div>
+        </div>
+
+        <div class="sidebar-social">
+            <a href="https://www.tiktok.com/@ttsad09" target="_blank" class="social-link"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.instagram.com/tts7.09" target="_blank" class="social-link"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = 'ar';
+
+        const data = {
+            ar: {
+                lockTitle: "🔐 نظام مشفر: آدم طوسي",
+                heroTitle: "كيفاش تبدا دخل الفلوس فـ أسبوع؟ 💸",
+                heroDesc: "هادشي كامل مبني على التجربة الشخصية ديالي والنصائح الحقيقية اللي غتخليك تدير أول مليون ديالك وتعرف تسيرها بلا كذوب.",
+                c1Title: "مشاريع الإنترنت (أسبوع 1)",
+                c1Desc: "صناعة صفحات الهبوط والـ MVP للشركات المحلية بالذكاء الاصطناعي. الطلب عليها خيالي والربح سريع جداً.",
+                c2Title: "مشاريع الواقع السريعة",
+                c2Desc: "الاتفاق مع المقاهي والمطاعم فـ مدينتك لتصنيع منيو رقمي (QR Code). مهارة كتجيب الكاش فـ 48 ساعة.",
+                c3Title: "قواعد إدارة الأموال",
+                c3Desc: "الفلوس اللي كتدخلها إلا ما عرفتيش تسيرها غتمشي. قاعدة 50/30/20 والاستثمار فـ راسك هوما السلاح."
+            },
+            en: {
+                lockTitle: "🔐 Encrypted System: Adam Taoussi",
+                heroTitle: "How to Make Money in 1 Week? 💸",
+                heroDesc: "Everything here is based on my personal experience and raw advice to help you stack your first million and manage it right.",
+                c1Title: "Online Speed-Runs",
+                c1Desc: "Building high-converting landing pages and MVPs for local businesses using AI. High demand, instant payouts.",
+                c2Title: "Real-World Hustles",
+                c2Desc: "Pitching digital QR Menus to cafes and restaurants in your city. A skill that generates raw cash in 48 hours.",
+                c3Title: "Money Management Rules",
+                c3Desc: "Money earned will vanish if not managed. The 50/30/20 rule and investing back into your skills is your true weapon."
+            }
+        };
+
+        function verifyKey(val) {
+            const correctKey = "123123";
+            const lockBox = document.getElementById('lock-box');
+            
+            if (val === correctKey) {
+                document.getElementById('lock-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('lock-screen').style.display = 'none';
+                    document.getElementById('app-content').style.display = 'block';
+                }, 500);
+            } else if (val.length === 6) {
+                lockBox.classList.add('shake');
+                setTimeout(() => {
+                    lockBox.classList.remove('shake');
+                    document.getElementById('passkey').value = '';
+                }, 400);
+            }
+        }
+
+        function toggleLanguage() {
+            const body = document.body;
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            
+            if (currentLang === 'en') {
+                body.style.fontFamily = var(--text-en);
+                body.dir = 'ltr';
+                body.classList.add('lang-en');
+                document.getElementById('langBtn').innerText = 'العربية';
+            } else {
+                body.style.fontFamily = var(--text-ar);
+                body.dir = 'rtl';
+                body.classList.remove('lang-en');
+                document.getElementById('langBtn').innerText = 'English';
+            }
+
+            // تحديث النصوص
+            document.getElementById('hero-title').innerText = data[currentLang].heroTitle;
+            document.getElementById('hero-desc').innerText = data[currentLang].heroDesc;
+            document.querySelector('.c1-title').innerText = data[currentLang].c1Title;
+            document.querySelector('.c1-desc').innerText = data[currentLang].c1Desc;
+            document.querySelector('.c2-title').innerText = data[currentLang].c2Title;
+            document.querySelector('.c2-desc').innerText = data[currentLang].c2Desc;
+            document.querySelector('.c3-title').innerText = data[currentLang].c3Title;
+            document.querySelector('.c3-desc').innerText = data[currentLang].c3Desc;
+        }
+    </script>
+</body>
+</html>
